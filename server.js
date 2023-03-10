@@ -11,10 +11,23 @@ app.use(cors({ credentials: true, origin: true }));
 // Set root for URL
 app.use(express.static(path.join(__dirname, '/www/')));
 const { stringReplace } = require('string-replace-middleware');
+const auth = require('basic-auth');
 
 app.use(stringReplace({
     'SERVER_KEY': process.env.SERVER_KEY,
 }));
+
+app.use('/', (req, res, next) => {
+	if (process.env.PRESENTER) {
+		const user = auth(req);
+		if (!user || user.name !== process.env.PRESENTER || user.pass !== process.env.PRESENTER_PASSWD) {
+			res.set('WWW-Authenticate', 'Basic realm="Host Access"');
+			res.status(401).send();
+			return;
+		}
+	}
+	next();
+});
 
 var server;
 
