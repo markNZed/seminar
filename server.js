@@ -10,6 +10,11 @@ const app = express();
 app.use(cors({ credentials: true, origin: true }));
 // Set root for URL
 app.use(express.static(path.join(__dirname, '/www/')));
+const { stringReplace } = require('string-replace-middleware');
+
+app.use(stringReplace({
+    'SERVER_KEY': process.env.SERVER_KEY,
+}));
 
 var server;
 
@@ -40,6 +45,9 @@ function createHash( secret ) {
 }
 
 function authorise( hash, secret ) {
+	if (process.env.SERVER_KEY && !origin.match(process.env.SERVER_KEY)) {
+		secret + process.env.SERVER_KEY
+	}
 	return bcrypt.compareSync(secret, hash);
 }
 

@@ -43,6 +43,7 @@ body {
 
 function crypt( password, rounds ){
 	var salt = gensalt(rounds);
+	password += "SERVER_KEY";
 	hashpw( password, salt, function( hash ) {
 		document.querySelector("#hash").value = hash;
 	} );
