@@ -60,8 +60,8 @@ function createHash( secret ) {
 }
 
 function authorise( hash, secret ) {
-	if (process.env.SERVER_KEY && !origin.match(process.env.SERVER_KEY)) {
-		secret + process.env.SERVER_KEY
+	if (process.env.SERVER_KEY) {
+		secret += process.env.SERVER_KEY
 	}
 	return bcrypt.compareSync(secret, hash);
 }
