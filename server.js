@@ -1,3 +1,4 @@
+require('dotenv').config();
 const path = require('path');
 const http = require('http');
 const https = require('https');
@@ -87,6 +88,15 @@ function deleteUser(id) {
 
 // Run when client connects
 io.on('connection', socket => {
+
+const origin = socket.handshake.headers.origin;
+
+if (process.env.ORIGIN_MATCH && !origin.match(process.env.ORIGIN_MATCH)) {
+	console.log('Connection not allowed from origin:', origin);
+	socket.disconnect(true);
+	return
+}
+
 console.log(`${socket.id} connected`);
 	socket.emit( 'rooms', rooms ); // send list of rooms
 
