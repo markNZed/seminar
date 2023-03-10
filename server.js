@@ -8,8 +8,6 @@ const moment = require('moment');
 var cors = require('cors');
 const app = express();
 app.use(cors({ credentials: true, origin: true }));
-// Set root for URL
-app.use(express.static(path.join(__dirname, '/www/')));
 const { stringReplace } = require('string-replace-middleware');
 const auth = require('basic-auth');
 
@@ -28,6 +26,10 @@ app.use('/', (req, res, next) => {
 	}
 	next();
 });
+
+// Set root for URL
+// Order of app.use matters 
+app.use(express.static(path.join(__dirname, '/www/')));
 
 var server;
 
